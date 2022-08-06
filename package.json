@@ -1,0 +1,68 @@
+{
+  "name": "apnn-visualization",
+  "version": "1.0.0",
+  "description": "library for 3d visualization of associative pulsed neural networks ",
+  "author": "pyszczekk",
+  "license": "AGH",
+  "repository": "pyszczekk/apnn-visualization",
+  "main": "dist/index.js",
+  "module": "dist/index.modern.js",
+  "source": "src/index.js",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "start": "microbundle-crl watch --no-compress --format modern,cjs",
+    "prepare": "run-s build",
+    "test": "run-s test:unit test:lint test:build",
+    "test:build": "run-s build",
+    "test:lint": "eslint .",
+    "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
+    "test:watch": "react-scripts test --env=jsdom",
+    "predeploy": "cd example && npm install && npm run build",
+    "deploy": "gh-pages -d example/build"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-config-standard-react": "^9.2.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "gh-pages": "^2.2.0",
+    "microbundle-crl": "^0.13.10",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.4"
+  },
+  "dependencies": {
+    "@react-three/drei": "9.11.0",
+    "@react-three/fiber": "8.0.1",
+    "@react-three/postprocessing": "2.0.5",
+    "autoprefixer": "^9.8.6",
+    "file-loader": "^6.2.0",
+    "postcss": "^8.0.0",
+    "postcss-cli": "^8.1.0",
+    "postprocessing": "^6.28.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.4.0",
+    "react-postprocessing": "^1.4.0",
+    "react-scripts": "5.0.1",
+    "react-toggle-slider": "^0.4.0",
+    "three": "0.140.0",
+    "url-loader": "^4.1.1"
+  },
+  "files": [
+    "dist"
+  ]
+}

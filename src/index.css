@@ -1,0 +1,14 @@
+.infoContainer{
+    float:right;
+    background:blue;
+    width:calc(100% - 800px);
+    min-width:300px;
+    height:600px;
+  }
+nav{
+    background:red;
+    width:100%;
+    display: flex;
+}
+
+

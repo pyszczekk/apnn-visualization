@@ -1,0 +1,84 @@
+/* add css module styles here (optional) */
+.dark *, .light *{
+  transition: all .3s;
+}
+.infoContainer{
+  float:right;
+  width:calc(100% - 800px);
+  min-width:300px;
+  height:600px;
+  display: flex;
+}
+
+.controlPanel{
+  display:flex;
+  min-height: 50px;
+  box-shadow: 0px 5px 5px gray;
+  align-items: center;
+  padding:10px 0;
+}
+
+.controlPanel>*{
+  display: inline-flex;
+  flex:1;
+  margin:5px;
+  padding:0;
+  box-sizing: border-box;
+}
+
+.controlPanel div:first-child{
+ justify-content: center;
+ align-items: center;
+}
+
+.controlPanel div{
+  font-size: 14px;
+}
+
+.dark>div, .dark>nav{
+  background-color: #2E3440;
+  color: #ECEFF4;
+}
+.dark div, .dark nav, .light div, .light nav{
+  font-weight: 400;
+  font-family: "Georgia";
+  justify-content: space-around;
+}
+.navButton{
+  display: inline-flex;
+  padding:10px 0px;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px #1798DE;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-size:14px;
+}
+.dark button{
+  background-color: #1798DE;
+  color:#2E3440;
+
+}
+.dark button:hover{
+  background-color: #2E3440;
+  color:#1798DE;
+ 
+}
+.light button{
+  background-color: #D8DEE9;
+  color:#1798DE;
+}
+.light button:hover{
+  background-color: #1798DE;
+  color:#D8DEE9;
+}
+
+
+.light>div, .light>nav{
+  background-color: #D8DEE9;
+  color:#1F232B;
+
+}
