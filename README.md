@@ -15,12 +15,12 @@ npm install --save apnn-visualization
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'apnn-visualization'
+import VisualizationApp from 'apnn-visualization'
 import 'apnn-visualization/dist/index.css'
 
 class Example extends Component {
   render() {
-    return <MyComponent />
+    return <VisualizationApp />
   }
 }
 ```
