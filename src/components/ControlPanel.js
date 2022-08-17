@@ -6,6 +6,7 @@ class ControlPanel extends React.Component{
     constructor(...props){
         super(...props);
     }
+    
     render(){
         return (
         <nav className={styles.controlPanel}>
@@ -22,7 +23,7 @@ class ControlPanel extends React.Component{
             <button className={styles.navButton}>Load data</button>
             <button className={styles.navButton}>Start training</button>
             <button className={styles.navButton}>Stop training</button>
-            <button className={styles.navButton}>Statistics</button>
+            <button className={styles.navButton} onClick={()=>{this.props.showStatistics(true)}}>Statistics</button>
             <div className="navInfo"> some informations</div>
         </nav>
         )

@@ -1,13 +1,32 @@
 /* add css module styles here (optional) */
+
 .dark *, .light *{
   transition: all .3s;
 }
+
 .infoContainer{
   float:right;
   width:calc(100% - 800px);
   min-width:300px;
   height:600px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.statisticsContainer{
+  width:100%;
+  flex:1;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
+.light div.infoContainer, .dark div.infoContainer{
+  justify-content: flex-start;
+}
+
+.infoContainer>*{
+max-width:80%;
+text-align: center;
 }
 
 .controlPanel{
