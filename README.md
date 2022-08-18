@@ -24,6 +24,18 @@ class Example extends Component {
   }
 }
 ```
+## Optional Attributes
+
+Default values of optional attributes of component
+| attribute name             |  default value                                            |
+| ----------------- | ------------------------------------------------------------------ |
+| connectionAddress |  localhost:8080 |
+| bgColor | ![#000E17](https://via.placeholder.com/10/000E17?text=+) #000E17 |
+| neuronColor | ![#FFB60A](https://via.placeholder.com/10/FFB60A?text=+) #FFB60A |
+| synapsisColor | ![#012C56](https://via.placeholder.com/10/012C56?text=+) #012C56 |
+| impulseColor | ![#FF331F](https://via.placeholder.com/10/FF331F?text=+) #FF331F |
+| relaxationColor | ![#1798DE](https://via.placeholder.com/10/1798DE?text=+) #1798DE |
+
 
 ## License
 
