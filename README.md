@@ -36,6 +36,12 @@ Default values of optional attributes of component
 | impulseColor | ![#FF331F](https://via.placeholder.com/10/FF331F?text=+) #FF331F |
 | relaxationColor | ![#1798DE](https://via.placeholder.com/10/1798DE?text=+) #1798DE |
 
+## Features
+
+- Light/dark mode toggle
+- Live previews
+- Cross platform
+
 
 ## License
 
