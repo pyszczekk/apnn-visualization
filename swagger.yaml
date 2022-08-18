@@ -1,0 +1,226 @@
+swagger: "2.0"
+info:
+  description: "This is a template server for apnn-visualization library.  It contains description how models and endpoints expected by library should look like."
+  version: "1.0.0"
+  title: "Asociative pulsative neural network visualization"
+  contact:
+    email: "kpieszczek@student.agh.edu.pl"
+  license:
+    name: "AGH"
+host: "localhost:8080"
+basePath: "/apnn-visualization"
+tags:
+- name: "apnn-query"
+  description: "Retrieving informations about the network"
+- name: "apnn-command"
+  description: "Base operations on the network"
+
+schemes:
+- "http"
+paths:
+  /model:
+    get:
+      tags:
+      - apnn-query
+      summary: "Retrieving current model state"
+      description: "Current model state"
+      operationId: retrieve_current_model_state
+      responses:
+        200:
+          description: "OK"
+          schema: 
+            $ref: "#/definitions/Model"
+        404:
+          description: "Not found"
+            
+  /statistics:
+    get:
+      tags:
+      - apnn-query
+      summary: "Retrieving statistics"
+      description: "Current statistics"
+      operationId: get_statistics
+      responses:
+        200:
+          description: "OK"
+          schema: 
+            $ref: "#/definitions/Statistics"
+        404:
+          description: "Not found"
+  /dataset:
+    post:
+      tags:
+      - apnn-command
+      summary: "Setting dataset for neural network"
+      description: "Setting dataset"
+      operationId: set_dataset
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: body
+          name: status
+          required: true
+          schema:
+            $ref: "#/definitions/Dataset"
+      responses:
+        200:
+          description: "Dataset loaded"
+        404:
+          description: "Not found"
+  /neural-network:
+    post:
+      tags:
+      - apnn-command
+      summary: "Starting training"
+      description: "Starting training of neural network"
+      operationId: run_training
+      responses:
+        200:
+          description: "OK"
+          schema: 
+            $ref: "#/definitions/Model"
+        404:
+          description: "Not found"
+    put:
+      tags:
+      - apnn-command
+      summary: "Stopping training"
+      description: "Stopping training of neural network"
+      operationId: stop_training
+      responses:
+        200:
+          description: "OK"
+          schema: 
+            $ref: "#/definitions/Model"
+        404:
+          description: "Not found"
+  
+definitions:
+  Model:
+    type: object
+    properties: 
+      description:
+        type: string
+      dataset_name:
+        type: string
+      title:
+        type: string
+      neural_network:
+        type: array
+        items:
+          $ref: "#/definitions/Synapsis"
+    required:
+      - neural_network
+    xml:
+      name: "Model"
+    
+  Dataset:
+    type: object
+    properties:
+      file:
+        type: string
+        format: binary
+    required:
+      - file
+    xml:
+      name: "Dataset"
+    
+  PlotData:
+    type: object
+    properties:
+      title:
+        type: string
+      plot_type:
+        type: string
+        enum:
+        - linePlot
+        - boxPlot
+      labelX:
+        type: string
+      labelY:
+        type: string
+      dataX:
+        type: array
+        items:
+          type: string
+      dataY:
+        type: array
+        items: 
+          type: string
+    required:
+      - plot_type
+      - dataX
+      - dataY
+    xml:
+      name: "PlotData"
+      
+  Statistics:
+    type: object
+    properties:
+      plots:
+        type: array
+        items: 
+          $ref: "#/definitions/PlotData"
+    required:
+      - plots
+    xml:
+      name: "Statistics"
+    
+    
+  Neuron:
+    type: object
+    properties:
+      label:
+        type: string
+      color:
+        type: string
+      position_x:
+        type: integer
+        minimum: -250
+        maximum: 250
+      position_y:
+        type: integer
+        minimum: -250
+        maximum: 250
+      position_z:
+        type: integer
+        minimum: -100
+        maximum: 100
+      charging:
+        type: number
+        maximum: 1.00
+        minimum: 0.01
+      description:
+        type: string
+    required:
+      - label
+      - position_x
+      - position_y
+      - position_z
+      - charging
+    xml:
+      name: "Neuron"
+    
+  Synapsis:
+    type: object
+    properties:
+      label:
+        type: string
+      weight: 
+        type: number
+      neuronFrom:
+        $ref: "#/definitions/Neuron"
+      neuronTo:
+        $ref: "#/definitions/Neuron"
+      color:
+        type: string
+    required:
+      - weight
+      - neuronFrom
+      - neuronTo
+    xml:
+      name: "Synapsis"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
