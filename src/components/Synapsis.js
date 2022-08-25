@@ -20,7 +20,7 @@ function Impulse({position, iRef, colors}){
   </mesh> 
 )
 }
-function StartPoint({ changeInfo, position, charging, destination , colors}) {
+function StartPoint({ changeInfo, position, charging, destination , colors, bgColor}) {
   // let [bindHover, hovered] = useHover()
   // let bindDrag = useDrag(onDrag, onEnd)
    
@@ -86,12 +86,12 @@ function StartPoint({ changeInfo, position, charging, destination , colors}) {
   return (
 
     <group>
-    <Neuron changeInfo={changeInfo} position={position} charging={charging} chargingRef={cRef} colors={colors}/>
+    <Neuron  bgColor={bgColor} changeInfo={changeInfo} position={position} charging={charging} chargingRef={cRef} colors={colors}/>
     <Impulse position={position} destination={destination} iRef={iRef}  colors={colors}/>
     </group>
   )
 }
-function EndPoint({changeInfo, position, charging, colors }) {
+function EndPoint({changeInfo, position, charging, colors, bgColor }) {
   // let [bindHover, hovered] = useHover()
   // let bindDrag = useDrag(onDrag, onEnd)
    
@@ -100,7 +100,7 @@ function EndPoint({changeInfo, position, charging, colors }) {
  
   return (
 
-    <Neuron changeInfo={changeInfo} position={position} charging={charging} chargingRef={cRef} colors ={colors}/>
+    <Neuron  bgColor={bgColor} changeInfo={changeInfo} position={position} charging={charging} chargingRef={cRef} colors ={colors}/>
     
   )
 }
@@ -120,7 +120,7 @@ function calculateColor (color) {
   color = negativeRGB(color);
   return "#"+componentToHex(color.r)+componentToHex(color.g)+componentToHex(color.b);
 }
-function Synapsis({ changeInfo,start, end , colors, weight}) {
+function Synapsis({ changeInfo,start, end , colors, weight, bgColor}) {
   const ref = useRef()
   const synapsis = useRef();
   const [hovered, setHovered] = React.useState(false);
@@ -139,7 +139,7 @@ function Synapsis({ changeInfo,start, end , colors, weight}) {
           }}
           onPointerOut={() => {
             setHovered(false);
-            changeInfo( "This panel shows informations about hovered elements")
+            changeInfo( "This panel shows informations about hovered element from visualization")
           }}>
             <bufferGeometry />
           <lineBasicMaterial 
@@ -149,8 +149,8 @@ function Synapsis({ changeInfo,start, end , colors, weight}) {
 	        linejoin='round' 
           />
         </line>
-        <StartPoint changeInfo={changeInfo} position={start} charging={0.70} destination={end} colors={colors}/>
-        <EndPoint changeInfo={changeInfo} position={end} charging={0.5} colors={colors}/>
+        <StartPoint  bgColor={bgColor} changeInfo={changeInfo} position={start} charging={0.65} destination={end} colors={colors}/>
+        <EndPoint  bgColor={bgColor} changeInfo={changeInfo} position={end} charging={0.1} colors={colors}/>
       </Fragment>
     )
   }
