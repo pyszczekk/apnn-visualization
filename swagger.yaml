@@ -172,8 +172,6 @@ definitions:
     properties:
       label:
         type: string
-      color:
-        type: string
       position_x:
         type: integer
         minimum: -250
@@ -189,11 +187,23 @@ definitions:
       charging:
         type: number
         maximum: 1.00
-        minimum: 0.01
+        minimum: -1.00
+        multipleOf: 0.01
+      state:
+        type: string
+        enum:
+        - resting
+        - relaxing
+        - refraction
+        - pulsing
+        - discharging
+        - charging
       description:
         type: string
+        
     required:
       - label
+      - state
       - position_x
       - position_y
       - position_z
@@ -212,8 +222,6 @@ definitions:
         $ref: "#/definitions/Neuron"
       neuronTo:
         $ref: "#/definitions/Neuron"
-      color:
-        type: string
     required:
       - weight
       - neuronFrom
