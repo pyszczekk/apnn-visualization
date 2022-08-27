@@ -6,7 +6,32 @@ import BarPlot from "./BarPlot";
 export default class StatisticsPanel extends React.Component{
     constructor(...props){
         super(...props);
-        this.state = {data: []}
+        this.state = {data: 
+            [{
+                title: "Test",
+                plot_type: "linePlot",
+                labelX: "epoch no",
+                labelY: "accuracy value",
+                dataX: ["epoch 1","epoch 10", "epoch 20", "epoch 30", "epoch 40", "epoch 50", "epoch 100"],
+                dataY: [16, 45, 67, 58, 75, 82, 94] 
+            },
+            {
+                title: "Test 2",
+                plot_type: "linePlot",
+                labelX: "epoch no",
+                labelY: "accuracy value",
+                dataX: ["epoch 1","epoch 10", "epoch 20", "epoch 30", "epoch 40", "epoch 50", "epoch 100"],
+                dataY: [5, 20, 33, 48, 42, 68, 72] 
+            },
+            {
+                title: "Test 2",
+                plot_type: "boxPlot",
+                labelX: "epoch no",
+                labelY: "accuracy value",
+                dataX: ["epoch 1","epoch 10", "epoch 20", "epoch 30", "epoch 40", "epoch 50", "epoch 100"],
+                dataY: [5, 20, 33, 48, 42, 68, 72] 
+            
+            }]}
         this.generateStatistics = this.generateStatistics.bind(this);
         this.generatePlots = this.generatePlots.bind(this);
         this.getPlots = this.getPlots.bind(this);
@@ -14,18 +39,15 @@ export default class StatisticsPanel extends React.Component{
     
 
 generatePlots = (darkMode) =>{
-    // if(data == null || data == undefined)
-    //     return null;
-    console.log("generating plots: "+this.state.data)
 
     var plots = this.state.data;
     if(plots==[] || plots == null || plots == undefined || plots == "") return <h2>No data or connection issue</h2>
     var linePlots, barPlots;
-    linePlots = plots.filter(plot => plot.plot_type=="linePlot").map(plotData => (
-        <LinePlot darkMode={darkMode} data={plotData}/>
+    linePlots = plots.filter(plot => plot.plot_type=="linePlot").map((plotData, index) => (
+        <LinePlot key={index} darkMode={darkMode} data={plotData}/>
     ))
-    barPlots = plots.filter(plot => plot.plot_type=="boxPlot").map(plotData => (
-        <BarPlot darkMode={darkMode} data={plotData}/>
+    barPlots = plots.filter(plot => plot.plot_type=="boxPlot").map((plotData, index) => (
+        <BarPlot key={index} darkMode={darkMode} data={plotData}/>
     ))
 
 
@@ -34,7 +56,6 @@ generatePlots = (darkMode) =>{
     
 }    
 getPlots = (darkMode) =>{
-    console.log("calling server")
     const requestOptions = {
         method: 'GET'
     };
@@ -48,17 +69,9 @@ getPlots = (darkMode) =>{
     })
     .catch((error) => {
       console.error('Error:', error);
-      var plots = [{
-        plot_type: "linePlot"
-    },
-    {
-        plot_type: "linePlot"
-    },
-    {
-        plot_type: "boxPlot"
-    }];
+    
     this.setState({
-        data: plots
+        data: []
     })
 
     });
@@ -76,7 +89,6 @@ getDefaultView=()=>{
     }
 
  generateStatistics=(darkMode)=>{
-    //generate statistics -> get statistics from server 
         return( 
         <div >
              <h1>Statistics</h1>

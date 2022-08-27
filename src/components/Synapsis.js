@@ -11,7 +11,7 @@ function Impulse({position, iRef, colors}){
   
   return(
   <mesh ref={iRef} position={position} >
-      <capsuleGeometry args={[1.5,2.5, 5, 5]} />
+      <sphereGeometry args={[2, 16, 16,2*Math.PI,2*Math.PI,2*Math.PI,2*Math.PI]} />
       <meshBasicMaterial 
       color= {colors[2]}
       clearcoat={1} 
@@ -20,61 +20,29 @@ function Impulse({position, iRef, colors}){
   </mesh> 
 )
 }
-function StartPoint({ changeInfo, position, charging, destination , colors, bgColor}) {
+function StartPoint({ changeInfo, neuron, destination , colors, bgColor, ...props }) {
   // let [bindHover, hovered] = useHover()
   // let bindDrag = useDrag(onDrag, onEnd)
-   
- const cRef = useRef();
  const iRef= useRef();
- var t = 1; 
-
+ const [t,setT] = useState(0);
+ const startPosition = [neuron.position_x,neuron.position_y,neuron.position_z];
  useFrame(()=>{
-
-  if(cRef.current.scale.x>=1){ 
-    t=0;
-    iRef.current.position.set(position);
+  if(neuron.state!="pulsing") setT(0);
+  if(neuron.state=="pulsing" && t==0){ 
+    iRef.current.position.set(startPosition);
     iRef.current.destination = destination;
-   
-    var diff = [position[0] - destination[0], position[1]-destination[1], position[2]-destination[2]];
-    var x = diff[0];
-    var y = diff[1];
-    var z = diff[2];
-    var yaw = Math.atan2(x, z) *180.0/Math.PI;
-    var padj = Math.sqrt(Math.pow(x, 2) + Math.pow(z, 2)); 
-    var pitch = Math.atan2(padj, y) *180.0/Math.PI; 
-    // console.log(diff)
-    // console.log(yaw, padj,pitch);
-    var maximum = max(abs(diff));
-  //   if(rotationAxis!=undefined || rotationAxis!=NaN){
-  //   var maximum = max(abs(rotationAxis))
-  //   var rAxis = rotationAxis
-  //     if(maximum!=0){
-  //       rAxis = rotationAxis.map((x)=>x/maximum);
-  //     }
-  //  var product = dot(position,destination);
-  //  var angle = acos(product);
-  // angle = Math.atan(angle.im/angle.re);
-
-  diff = [parseFloat(diff[0]/maximum),parseFloat(diff[1]/maximum),parseFloat(diff[2]/maximum)]
- // console.log(maximum, diff,"normalize");
-    iRef.current.rotation.x =  padj*diff[2]*Math.PI/180
-    iRef.current.rotation.y =  yaw*diff[1]*Math.PI/180
-    iRef.current.rotation.z =  pitch*diff[0]*Math.PI/180
-    
-  //  if(maximum==0)
-  //  iRef.current.rotation.z =  Math.PI/2+rAxis[2]*angle;
-  // console.log(rotationAxis, rAxis, angle, maximum, product);
-  //}
   }; 
   
+
   if(t<1){
     console.log("Sending")
     
-    var newX = lerp(position[0], destination[0], t);   // interpolate between a and b where
-    var newY = lerp(position[1], destination[1], t);   // t is first passed through a easing
-    var newZ = lerp(position[2], destination[2], t);   // function in this example.
+    var newX = lerp(startPosition[0], destination[0], t);   // interpolate between a and b where
+    var newY = lerp(startPosition[1], destination[1], t);   // t is first passed through a easing
+    var newZ = lerp(startPosition[2], destination[2], t);   // function in this example.
 
-    t+=0.07
+    // t+=0.1
+    setT(Number(t)+0.1);
     iRef.current.position.x = newX;
     iRef.current.position.y = newY;
     iRef.current.position.z = newZ;
@@ -86,21 +54,19 @@ function StartPoint({ changeInfo, position, charging, destination , colors, bgCo
   return (
 
     <group>
-    <Neuron  bgColor={bgColor} changeInfo={changeInfo} position={position} charging={charging} chargingRef={cRef} colors={colors}/>
-    <Impulse position={position} destination={destination} iRef={iRef}  colors={colors}/>
+    <Neuron bgColor={bgColor} changeInfo={changeInfo} position={[neuron.position_x,neuron.position_y,neuron.position_z]} charging={neuron.charging} colors={colors} label={neuron.label} state={neuron.state}/>
+    <Impulse position={[neuron.position_x,neuron.position_y,neuron.position_z]} destination={destination} iRef={iRef}  colors={colors}/>
     </group>
   )
 }
-function EndPoint({changeInfo, position, charging, colors, bgColor }) {
+function EndPoint({changeInfo, neuron, colors, bgColor, ...props }) {
   // let [bindHover, hovered] = useHover()
   // let bindDrag = useDrag(onDrag, onEnd)
-   
- const cRef = useRef();
+  
 
  
   return (
-
-    <Neuron  bgColor={bgColor} changeInfo={changeInfo} position={position} charging={charging} chargingRef={cRef} colors ={colors}/>
+    <Neuron bgColor={bgColor} changeInfo={changeInfo} position={[neuron.position_x,neuron.position_y,neuron.position_z]} charging={neuron.charging} colors={colors} label={neuron.label} state={neuron.state}/>
     
   )
 }
@@ -120,13 +86,14 @@ function calculateColor (color) {
   color = negativeRGB(color);
   return "#"+componentToHex(color.r)+componentToHex(color.g)+componentToHex(color.b);
 }
-function Synapsis({ changeInfo,start, end , colors, weight, bgColor}) {
+function Synapsis({ changeInfo, start, end , colors, weight, bgColor, ...props}) {
   const ref = useRef()
-  const synapsis = useRef();
   const [hovered, setHovered] = React.useState(false);
+  const startPosition = [start.position_x, start.position_y, start.position_z];
+  const endPosition = [end.position_x, end.position_y, end.position_z]
   useLayoutEffect(() => {
-    ref.current.geometry.setFromPoints([start, end].map((point) => new THREE.Vector3(...point)))
-  }, [start, end])
+    ref.current.geometry.setFromPoints([startPosition, endPosition].map((point) => new THREE.Vector3(...point)))
+  }, [startPosition, endPosition])
   
   
     return (
@@ -135,7 +102,7 @@ function Synapsis({ changeInfo,start, end , colors, weight, bgColor}) {
             setHovered(true);
             console.log("POINTER OVER synapsis");
             
-            changeInfo( "Synapsis: "+weight)
+            changeInfo( "Synapsis\n weight: "+weight)
           }}
           onPointerOut={() => {
             setHovered(false);
@@ -149,10 +116,10 @@ function Synapsis({ changeInfo,start, end , colors, weight, bgColor}) {
 	        linejoin='round' 
           />
         </line>
-        <StartPoint  bgColor={bgColor} changeInfo={changeInfo} position={start} charging={0.65} destination={end} colors={colors}/>
-        <EndPoint  bgColor={bgColor} changeInfo={changeInfo} position={end} charging={0.1} colors={colors}/>
+        <StartPoint  bgColor={bgColor} changeInfo={changeInfo} neuron={start} destination={[end.position_x,end.position_y,end.position_z]} colors={colors}/>
+        <EndPoint  bgColor={bgColor} changeInfo={changeInfo} neuron={end} colors={colors}/>
       </Fragment>
     )
   }
-  export default Synapsis;
+  export default React.memo(Synapsis);
   

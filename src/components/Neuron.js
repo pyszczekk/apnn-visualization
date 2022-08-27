@@ -1,19 +1,135 @@
-import React, { useRef , useState} from 'react'
-import * as THREE from 'three'
-import { useFrame } from "@react-three/fiber";
+import React, { useRef , useState, useEffect} from 'react'
 import { useSpring } from '@react-spring/core'
 import { animated } from '@react-spring/three'
 
 function Neuron({changeInfo, ...props}){
-    const neuronRef = useRef();
-    const chargerRef = props.chargingRef;
-    let mnoznik = 1.0;
-    let charg = props.charging;
-    //const [charg, setCharg] = useState(props.charging);
+    
     const [hover, setHover] = useState(false);
-    const [neuronColor, setNeuronColor] = useState(props.colors[0]);
     const [neuronState, setNeuronState] = useState(0);
+    const [neuronColor, setNeuronColor] = useState(props.colors[0]);
+    const [prevColor, setPrevColor] = useState(props.colors[0]);
+    const [prevState, setPrevState] = useState(0);
+    const neuronColors = [props.colors[0], props.colors[2], calculateColorBetween(props.colors[2],props.colors[3]),props.colors[3],props.colors[4]]
+    
+    useEffect(
+      () => {
+        
+        let timer = null;
 
+        if(neuronState == 1){
+          timer = setTimeout(()=>{
+                  calculateState("toRefraction")
+                },100);
+          
+        }
+        else if(neuronState == 2){
+          timer = setTimeout(()=>{
+                  calculateState("refraction")
+                },200);
+        }else {
+          timer = setTimeout(()=>{
+            calculateState(props.state)
+          },400);
+        }
+          // switch(state){
+          //   case 0:
+          //     timer = setTimeout(()=>{
+          //       setNeuronState(1)
+          //       setNeuronColor(neuronColors[0])
+          //       setPrevColor(neuronColors[0])
+          //     },1000);
+          //     break;
+          //   case 1:
+          //     timer = setTimeout(()=>{
+          //       setNeuronState(1.5)
+          //       setNeuronColor(neuronColors[2])
+          //       setPrevColor(neuronColors[1])
+          //       setPrevState(1)
+          //     },200);
+          //     break;
+          //   case 1.5:
+          //     timer = setTimeout(()=>{
+          //       setNeuronState(2)
+          //       setNeuronColor(neuronColors[3])
+          //       setPrevColor(neuronColors[2])
+          //       setPrevState(1.5)
+          //     },200);
+          //     break;
+          //   case 2:
+          //     timer = setTimeout(()=>{
+          //       setNeuronState(3)
+          //       setNeuronColor(neuronColors[4])
+          //       setPrevColor(neuronColors[3])
+          //       setPrevState(2)
+          //     },1000);
+          //     break;
+          //   case 3:
+          //     timer = setTimeout(()=>{
+          //       setNeuronState(0)
+          //       setNeuronColor(neuronColors[0])
+          //       setPrevColor(neuronColors[4])
+          //       setPrevState(3)
+          //     },1000);
+          //     break;
+          //   default:
+          //     timer = setTimeout(()=>{
+          //       setNeuronState(0)
+          //       setNeuronColor(neuronColors[0])
+          //       setPrevColor(neuronColors[4])
+          //       setPrevState(0)
+          //     },1000);
+          //     break;
+            
+          // }
+          
+          return () => clearTimeout(timer);
+      },
+      [neuronState, props.state]
+    );
+    function calculateState(state){
+      setPrevState(neuronState)
+      setPrevColor(neuronColor)
+      switch (state){
+        case "relaxing":
+          setNeuronState(4)
+          setNeuronColor(neuronColors[4]);
+          break;
+        case "pulsing":
+          setNeuronState(1)
+          setNeuronColor(neuronColors[1]);
+          break;
+        case "toRefraction":
+          setNeuronState(2)
+          setNeuronColor(neuronColors[2]);
+          break;
+        case "refraction":
+          setNeuronState(3)
+          setNeuronColor(neuronColors[3]);
+          break;
+        case "charging":
+          if(props.charging>=0){
+            setNeuronState(4)
+            setNeuronColor(neuronColors[4]);
+          }else{
+            setNeuronState(3)
+          setNeuronColor(neuronColors[3]);
+          }
+          break;
+        case "discharging":
+          if(props.charging>=0){
+            setNeuronState(0)
+            setNeuronColor(neuronColors[0]);
+          }else{
+            setNeuronState(3)
+            setNeuronColor(neuronColors[3]);
+          }
+          break;
+        default:
+          setNeuronState(0)
+          setNeuronColor(neuronColors[0]);
+      }
+
+    }
     function calculateColor (color) {
       color = negativeRGB(color);
       return "#"+componentToHex(color.r)+componentToHex(color.g)+componentToHex(color.b);
@@ -31,108 +147,66 @@ function Neuron({changeInfo, ...props}){
       return hex.length == 1 ? "0" + hex : hex;
     }
 
-    // function hexToRgb(hex) {
-    //     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    //     return result ? {
-    //       r: parseInt(result[1], 16),
-    //       g: parseInt(result[2], 16),
-    //       b: parseInt(result[3], 16)
-    //     } : null;
-    //   }
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
 
-    // function calculateColor (chargingValue, activeColor, nextColor) {
-    //     var rColor,gColor,bColor;
+    function calculateColorBetween (activeColor, nextColor) {
+        var rColor,gColor,bColor;
 
-    //     var rgbActive = hexToRgb(activeColor);
-    //     var rgbNext = hexToRgb(nextColor);
-    //     //chargingValue dla rosnacej kulki a dla malejacej na odwrot;
-    //     rColor = parseInt((rgbActive.r - (rgbActive.r-rgbNext.r)*(1-chargingValue)));
-    //     gColor = parseInt(rgbActive.g - (rgbActive.g-rgbNext.g)*(1-chargingValue));
-    //     bColor = parseInt(rgbActive.b - (rgbActive.b-rgbNext.b)*(1-chargingValue));
-    //    // console.log("rgb("+rColor+","+gColor+","+bColor+")")
+        var rgbActive = hexToRgb(activeColor);
+        var rgbNext = hexToRgb(nextColor);
+        rColor = parseInt((rgbActive.r - (rgbActive.r-rgbNext.r)*0.5));
+        gColor = parseInt(rgbActive.g - (rgbActive.g-rgbNext.g)*0.5);
+        bColor = parseInt(rgbActive.b - (rgbActive.b-rgbNext.b)*0.5);
 
-    //     return "rgb("+rColor+","+gColor+","+bColor+")";
-    // }
-    // useFrame(()=>{
-    //     //temporary charging, to see animation
-        
-        
-    //     chargerRef.current.scale.x = charg;
-    //     chargerRef.current.scale.y = charg;
-    //     chargerRef.current.scale.z = charg;
-    //     props.charging = charg;
-       
-    //     if(charg>=1) {
-    //         mnoznik = -1.0;
-            
-    //         //setNeuronColor(props.colors[2])
-    //        // setTimeout(()=>{ setNeuronColor(props.colors[0])}, 500);
-    //     }
-       
-    //     if(charg<=0) {
-    //          mnoznik = 1.0
-            
-    //     }
-    //     //if(charg==1) setNeuronColor(props.colors[2])
-    //     charg = charg +(0.01*mnoznik);
-    //    // setCharg(c+(0.01*mnoznik));
-    //     // if(hover){
-    //     //     neuronRef.current.scale.x = 1.5;
-    //     //     neuronRef.current.scale.y = 1.5;
-    //     //     neuronRef.current.scale.z = 1.5;
-    //     // }else{
-    //     //     neuronRef.current.scale.x = 1;
-    //     //     neuronRef.current.scale.y = 1;
-    //     //     neuronRef.current.scale.z = 1;
-    //     // }
-
-    //     if(chargerRef.current.scale.x<=0.98  && mnoznik<0 && neuronColor==props.colors[2]) {
-    //         mnoznik = -1.0;
-            
-    //     //    neuronColor = props.colors[0];
-    //      }
-   // })
-    
+        return "rgb("+rColor+","+gColor+","+bColor+")";
+    }
+  
+  
    const { spring } = useSpring({
     spring: neuronState,
-    config: { mass: 5, tension: 400, friction: 50, precision: 0.0001 }
+    config: { mass: 5, tension: 400, friction: 50, precision: 0.0001, duration: 200},
+    loop: false
   })
 
-  // interpolate values from commong spring
-  // const scale = spring.to([0, 1], [1, 5])
-  // const rotation = spring.to([0, 1], [0, Math.PI])
-  //neuronState -> set color according to state 
-   const color = spring.to([0, 1,2,3,4], props.colors)
+
+   const color = spring.to([prevState, neuronState], [prevColor,neuronColor])
 
 
     return(
         <animated.group
         onPointerOver={() => {
             setHover(true);
-            console.log("POINTER OVER");
           
-            changeInfo( "Neuron: "+props.position)
+            changeInfo( "Neuron \n"+
+                        "label: "+props.label+"\n" +
+                        "position:"+props.position+"\n"+
+                        "charging value: "+props.charging+"\n"+
+                        "state: "+props.state+"\n"+
+                        "description: "+props.description+"\n"
+            )
           }}
           onPointerOut={() => {
             setHover(false);
-           
-            setNeuronState(Number(neuronState)==props.colors.length-1?Number(0):Number(neuronState+1));
-
             changeInfo( "This panel shows informations about hovered element from visualization")
           }}
           >
-             <animated.mesh ref={chargerRef} {...props} scale = {[props.charging, props.charging, props.charging]}>
+             <animated.mesh {...props} scale = {[Math.abs(props.charging), Math.abs(props.charging),Math.abs(props.charging)]}>
                 <sphereGeometry args={[15, 64, 32,2*Math.PI,2*Math.PI,2*Math.PI,2*Math.PI]} />
                 <animated.meshStandardMaterial 
-                // color= {calculateColor(charg, props.colors[2], props.colors[3])}
                 color={color}
                 
              />
             </animated.mesh>
-            <animated.mesh ref={neuronRef} {...props}>
+            <animated.mesh {...props}>
             <sphereGeometry args={[15, 64, 32,2*Math.PI,2*Math.PI,2*Math.PI,2*Math.PI]} />
             <animated.meshStandardMaterial 
-            // color= {calculateColor(charg, props.colors[2], props.colors[3])}
             color={color}
             transparent={true} 
             opacity={0.5} 

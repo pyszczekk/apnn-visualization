@@ -50,6 +50,9 @@
 max-width:80%;
 text-align: center;
 }
+.infoContainer p{
+  font-size: 22px;
+}
 
 .controlPanel{
   display:flex;

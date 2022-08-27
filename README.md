@@ -34,8 +34,8 @@ Default values of optional attributes of component
 | neuronColor | ![#FFB60A](https://via.placeholder.com/10/FFB60A?text=+) #FFB60A |
 | synapsisColor | ![#012C56](https://via.placeholder.com/10/012C56?text=+) #012C56 |
 | impulseColor | ![#FF331F](https://via.placeholder.com/10/FF331F?text=+) #FF331F |
-| relaxationColor | ![#1798DE](https://via.placeholder.com/10/1798DE?text=+) #1798DE |
-
+| refractionColor | ![#1798DE](https://via.placeholder.com/10/1798DE?text=+) #1798DE |
+| relaxingColor | ![#59FFA0](https://via.placeholder.com/10/59FFA0?text=+) #59FFA0 |
 ## Features
 
 - Light/dark mode toggle

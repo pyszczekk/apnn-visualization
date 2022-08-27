@@ -12,7 +12,7 @@ export default class InformationPanel extends React.Component{
         return (
         <div className={styles.infoContainer}>
             <h1>Informations</h1>
-            <h2>{info}</h2>
+            <div>{info.split('\n').map((line, idx) => <p key={idx}>{line}</p>)}</div>
         </div>
         )
     }
