@@ -1,13 +1,57 @@
 /* add css module styles here (optional) */
+
 .dark *, .light *{
   transition: all .3s;
 }
+
 .infoContainer{
   float:right;
   width:calc(100% - 800px);
   min-width:300px;
   height:600px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media screen and (max-width: 1100px) {
+  .infoContainer{
+    float:left;
+    width:100%;
+    min-width:300px;
+    height:auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.statisticsContainer{
+  width:100%;
+  flex:1;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
+.statisticsContainer>div{
+  width:50%;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  margin-left:25%;
+  display: inline-flex;
+  padding-top: 25px;
+  padding-bottom:30px;
+}
+
+.light div.infoContainer, .dark div.infoContainer{
+  justify-content: flex-start;
+}
+
+.infoContainer>*{
+max-width:80%;
+text-align: center;
+}
+.infoContainer p{
+  font-size: 22px;
 }
 
 .controlPanel{
@@ -57,21 +101,24 @@
   box-sizing: border-box;
   font-size:14px;
 }
-.dark button{
+.dark button, .dark .navButton{
   background-color: #1798DE;
   color:#2E3440;
 
 }
-.dark button:hover{
+.navButton input{
+  display: none;
+}
+.dark button:hover, .dark .navButton:hover {
   background-color: #2E3440;
   color:#1798DE;
  
 }
-.light button{
+.light button, .light .navButton{
   background-color: #D8DEE9;
   color:#1798DE;
 }
-.light button:hover{
+.light button:hover, .light .navButton:hover{
   background-color: #1798DE;
   color:#D8DEE9;
 }

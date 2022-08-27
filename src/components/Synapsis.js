@@ -1,32 +1,17 @@
 import * as THREE from 'three'
-import ReactDOM from 'react-dom'
 import React, { useLayoutEffect, Fragment, useRef, useEffect, useState, useCallback, useContext, useMemo, forwardRef } from 'react'
 import Neuron from './Neuron'
 import { useFrame } from "@react-three/fiber";
-import { InstancedInterleavedBuffer } from 'three';
+import { max, abs} from 'mathjs';
 
 
-// function useHover() {
-//   const [hovered, setHover] = useState(false)
-//   const hover = useCallback((e) => (e.stopPropagation(), setHover(true)), [])
-//   const unhover = useCallback((e) => setHover(false), [])
-//   return [{ onPointerOver: hover, onPointerOut: unhover }, hovered]
-// }
-
-// function useDrag(onDrag, onEnd) {
-//   const [active, setActive] = useState(false)
-//    const activeRef = useRef()
-//   const move = useCallback((event) => activeRef.current && (event.stopPropagation(), onDrag(event.unprojectedPoint)), [onDrag])
-//   useEffect(() => void (activeRef.current = active))
-//   return { onPointerMove: move }
-// }
 function lerp(a, b, t) {return a + (b - a) * t}
 
 function Impulse({position, iRef, colors}){
   
   return(
-  <mesh ref={iRef} position={position}>
-      <sphereGeometry args={[5, 16, 16]} />
+  <mesh ref={iRef} position={position} >
+      <sphereGeometry args={[2, 16, 16,2*Math.PI,2*Math.PI,2*Math.PI,2*Math.PI]} />
       <meshBasicMaterial 
       color= {colors[2]}
       clearcoat={1} 
@@ -35,77 +20,106 @@ function Impulse({position, iRef, colors}){
   </mesh> 
 )
 }
-function StartPoint({ position, charging, destination , colors}) {
+function StartPoint({ changeInfo, neuron, destination , colors, bgColor, ...props }) {
   // let [bindHover, hovered] = useHover()
   // let bindDrag = useDrag(onDrag, onEnd)
-   
- const cRef = useRef();
  const iRef= useRef();
- var t = 1;
+ const [t,setT] = useState(0);
+ const startPosition = [neuron.position_x,neuron.position_y,neuron.position_z];
  useFrame(()=>{
-  if(cRef.current.scale.x==1){ 
-    t=0;
-    iRef.current.position.set(position);
-     iRef.current.destination = destination;
+  if(neuron.state!="pulsing") setT(0);
+  if(neuron.state=="pulsing" && t==0){ 
+    iRef.current.position.set(startPosition);
+    iRef.current.destination = destination;
   }; 
   
+
   if(t<1){
     console.log("Sending")
-    var newX = lerp(position[0], destination[0], t);   // interpolate between a and b where
-    var newY = lerp(position[1], destination[1], t);   // t is first passed through a easing
-    var newZ = lerp(position[2], destination[2], t);   // function in this example.
+    
+    var newX = lerp(startPosition[0], destination[0], t);   // interpolate between a and b where
+    var newY = lerp(startPosition[1], destination[1], t);   // t is first passed through a easing
+    var newZ = lerp(startPosition[2], destination[2], t);   // function in this example.
 
-    t+=0.1
+    // t+=0.1
+    setT(Number(t)+0.1);
     iRef.current.position.x = newX;
     iRef.current.position.y = newY;
     iRef.current.position.z = newZ;
   }
+  
   
 })
  
   return (
 
     <group>
-    <Neuron position={position} charging={charging} chargingRef={cRef} colors={colors}/>
-    <Impulse position={position} destination={destination} iRef={iRef}  colors={colors}/>
+    <Neuron bgColor={bgColor} changeInfo={changeInfo} position={[neuron.position_x,neuron.position_y,neuron.position_z]} charging={neuron.charging} colors={colors} label={neuron.label} state={neuron.state}/>
+    <Impulse position={[neuron.position_x,neuron.position_y,neuron.position_z]} destination={destination} iRef={iRef}  colors={colors}/>
     </group>
   )
 }
-function EndPoint({ position, charging, colors }) {
+function EndPoint({changeInfo, neuron, colors, bgColor, ...props }) {
   // let [bindHover, hovered] = useHover()
   // let bindDrag = useDrag(onDrag, onEnd)
-   
- const cRef = useRef();
+  
 
  
   return (
-
-    <Neuron position={position} charging={charging} chargingRef={cRef} colors ={colors}/>
+    <Neuron bgColor={bgColor} changeInfo={changeInfo} position={[neuron.position_x,neuron.position_y,neuron.position_z]} charging={neuron.charging} colors={colors} label={neuron.label} state={neuron.state}/>
     
   )
 }
-function Synapsis({ start, end , colors}) {
+function negativeRGB(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: 255-parseInt(result[1], 16),
+    g: 255-parseInt(result[2], 16),
+    b: 255-parseInt(result[3], 16)
+  } : null;
+}
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+function calculateColor (color) {
+  color = negativeRGB(color);
+  return "#"+componentToHex(color.r)+componentToHex(color.g)+componentToHex(color.b);
+}
+function Synapsis({ changeInfo, start, end , colors, weight, bgColor, ...props}) {
   const ref = useRef()
-  const synapsis = useRef();
+  const [hovered, setHovered] = React.useState(false);
+  const startPosition = [start.position_x, start.position_y, start.position_z];
+  const endPosition = [end.position_x, end.position_y, end.position_z]
   useLayoutEffect(() => {
-    ref.current.geometry.setFromPoints([start, end].map((point) => new THREE.Vector3(...point)))
-  }, [start, end])
+    ref.current.geometry.setFromPoints([startPosition, endPosition].map((point) => new THREE.Vector3(...point)))
+  }, [startPosition, endPosition])
   
-
+  
     return (
       <Fragment>
-        <line ref={ref}>
-          <bufferGeometry/>
+        <line ref={ref} onPointerOver={() => {
+            setHovered(true);
+            console.log("POINTER OVER synapsis");
+            
+            changeInfo( "Synapsis\n weight: "+weight)
+          }}
+          onPointerOut={() => {
+            setHovered(false);
+            changeInfo( "This panel shows informations about hovered element from visualization")
+          }}>
+            <bufferGeometry />
           <lineBasicMaterial 
-          color = {colors[1]}
+          color = {hovered? calculateColor(colors[1]) : colors[1]}
 	        linewidth={20}
 	        linecap='round' 
-	        linejoin='round' />
+	        linejoin='round' 
+          />
         </line>
-        <StartPoint position={start} charging={1} destination={end} colors={colors}/>
-        <EndPoint position={end} charging={0} colors={colors}/>
+        <StartPoint  bgColor={bgColor} changeInfo={changeInfo} neuron={start} destination={[end.position_x,end.position_y,end.position_z]} colors={colors}/>
+        <EndPoint  bgColor={bgColor} changeInfo={changeInfo} neuron={end} colors={colors}/>
       </Fragment>
     )
   }
-  export default Synapsis;
+  export default React.memo(Synapsis);
   
