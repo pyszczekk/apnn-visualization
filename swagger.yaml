@@ -8,7 +8,7 @@ info:
   license:
     name: "AGH"
 host: "localhost:8080"
-basePath: "/apnn-visualization"
+basePath: "/"
 tags:
 - name: "apnn-query"
   description: "Retrieving informations about the network"
@@ -58,7 +58,7 @@ paths:
         - multipart/form-data
       parameters:
         - in: body
-          name: status
+          name: file
           required: true
           schema:
             $ref: "#/definitions/Dataset"
