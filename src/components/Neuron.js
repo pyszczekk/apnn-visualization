@@ -9,27 +9,29 @@ function Neuron({changeInfo, ...props}){
     const [neuronColor, setNeuronColor] = useState(props.colors[0]);
     const [prevColor, setPrevColor] = useState(props.colors[0]);
     const [prevState, setPrevState] = useState(0);
+
     const neuronColors = [props.colors[0], props.colors[2], calculateColorBetween(props.colors[2],props.colors[3]),props.colors[3],props.colors[4]]
     
     useEffect(
       () => {
         
+       
         let timer = null;
 
         if(neuronState == 1){
           timer = setTimeout(()=>{
                   calculateState("toRefraction")
-                },100);
+                },150);
           
         }
         else if(neuronState == 2){
           timer = setTimeout(()=>{
                   calculateState("refraction")
-                },200);
+                },150);
         }else {
           timer = setTimeout(()=>{
             calculateState(props.state)
-          },400);
+          },100);
         }
           // switch(state){
           //   case 0:
@@ -171,13 +173,13 @@ function Neuron({changeInfo, ...props}){
   
    const { spring } = useSpring({
     spring: neuronState,
-    config: { mass: 5, tension: 400, friction: 50, precision: 0.0001, duration: 200},
+    config: { mass: 5, tension: 400, friction: 50, precision: 0.0001, duration: 100},
     loop: false
   })
 
 
    const color = spring.to([prevState, neuronState], [prevColor,neuronColor])
-
+ 
 
     return(
         <animated.group
@@ -197,7 +199,7 @@ function Neuron({changeInfo, ...props}){
             changeInfo( "This panel shows informations about hovered element from visualization")
           }}
           >
-             <animated.mesh {...props} scale = {[Math.abs(props.charging), Math.abs(props.charging),Math.abs(props.charging)]}>
+             <animated.mesh {...props} scale = {Math.abs(props.charging)}>
                 <sphereGeometry args={[15, 64, 32,2*Math.PI,2*Math.PI,2*Math.PI,2*Math.PI]} />
                 <animated.meshStandardMaterial 
                 color={color}

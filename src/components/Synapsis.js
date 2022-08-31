@@ -25,17 +25,22 @@ function StartPoint({ changeInfo, neuron, destination , colors, bgColor, ...prop
   // let bindDrag = useDrag(onDrag, onEnd)
  const iRef= useRef();
  const [t,setT] = useState(0);
+ const [pulsed, setPulsed] = useState(false);
  const startPosition = [neuron.position_x,neuron.position_y,neuron.position_z];
- useFrame(()=>{
-  if(neuron.state!="pulsing") setT(0);
-  if(neuron.state=="pulsing" && t==0){ 
+ useEffect(()=>{
+  
+  if(neuron.state=="pulsing" && !pulsed) { 
+    console.log(neuron);
+    setT(0);
+    setPulsed(true)
+    console.log("Sending")
     iRef.current.position.set(startPosition);
     iRef.current.destination = destination;
   }; 
   
 
-  if(t<1){
-    console.log("Sending")
+  if(t<1 && pulsed){
+    //console.log("Sending")
     
     var newX = lerp(startPosition[0], destination[0], t);   // interpolate between a and b where
     var newY = lerp(startPosition[1], destination[1], t);   // t is first passed through a easing
@@ -47,9 +52,9 @@ function StartPoint({ changeInfo, neuron, destination , colors, bgColor, ...prop
     iRef.current.position.y = newY;
     iRef.current.position.z = newZ;
   }
+  if(t>=1) setPulsed(false);
   
-  
-})
+},[neuron.state,t])
  
   return (
 

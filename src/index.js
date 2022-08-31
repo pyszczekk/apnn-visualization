@@ -14,12 +14,13 @@ export const VisualizationApp = ({ connectionAddress, bgColor, neuronColor, syna
   const [statistics, setStatistics] = React.useState(false)
   const [training, setTraining] = React.useState(false);
   const [network, setNetwork] = React.useState(null);
+
  
   const getModelSchema = async()=>{
     const requestOptions = {
         method: 'GET'
     };
-    await fetch("https://"+connAddress+"/model", requestOptions)
+    await fetch("http://"+connAddress+"/model", requestOptions)
     .then(response => response.json())
     .then(data => {
       setNetwork(data);
@@ -36,7 +37,7 @@ export const VisualizationApp = ({ connectionAddress, bgColor, neuronColor, syna
       if(training){
       timer = setTimeout(()=>{
         getModelSchema();
-      },500);
+      },300);
       }
       return () => clearTimeout(timer);
     },

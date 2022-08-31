@@ -60,7 +60,7 @@ getPlots = (darkMode) =>{
         method: 'GET'
     };
    
-    fetch("https://"+this.props.connectionAddress+"/statistics", requestOptions)
+    fetch("http://"+this.props.connectionAddress+"/statistics", requestOptions)
     .then(response => response.json())
     .then(data => {
         this.setState({

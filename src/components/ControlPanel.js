@@ -19,17 +19,19 @@ class ControlPanel extends React.Component{
             method: 'POST'
         };
        
-         fetch("https://"+this.props.connectionAddress+"/neural-network", requestOptions)
+         fetch("http://"+this.props.connectionAddress+"/neural-network", requestOptions)
         .then(response => {
             if(response.status === 200){
                 console.log("Started training")   
-                this.setState({
-                    title: response.json().title
-                }) 
-                this.props.showVisualization(true);           
+                this.props.showVisualization(true);  
+                return response.json();         
             }else {
                 console.log("SOMETHING WENT WRONG")
             }
+        }).then(data =>{
+            this.setState({
+                title: data.title
+            }) 
         }).catch((error) => {
             console.error('Error:', error);
       
@@ -43,7 +45,7 @@ class ControlPanel extends React.Component{
             method: 'PUT'
         };
        
-         fetch("https://"+this.props.connectionAddress+"/neural-network", requestOptions)
+         fetch("http://"+this.props.connectionAddress+"/neural-network", requestOptions)
         .then(response => {
             if(response.status === 200){
                 console.log("Stopped training") 
@@ -68,7 +70,7 @@ class ControlPanel extends React.Component{
                 body: formData
             };
            
-             fetch("https://"+this.props.connectionAddress+"/dataset", requestOptions)
+             fetch("http://"+this.props.connectionAddress+"/dataset", requestOptions)
             .then(response => {
                 if(response.status === 200){
                     console.log("Data loaded")    

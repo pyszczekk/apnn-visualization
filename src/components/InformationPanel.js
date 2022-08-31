@@ -4,9 +4,7 @@ import styles from '../styles.module.css';
 export default class InformationPanel extends React.Component{
     constructor(...props){
         super(...props);
-    
     }
-    
     render(){
         let info = this.props.informations
         return (
