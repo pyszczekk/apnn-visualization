@@ -1,7 +1,9 @@
 import React, { useRef , useState, useEffect} from 'react'
 import { useSpring } from '@react-spring/core'
 import { animated } from '@react-spring/three'
-
+import { extend } from '@react-three/fiber'
+import { Text } from 'troika-three-text'
+extend({ Text });
 function Neuron({changeInfo, ...props}){
     
     const [hover, setHover] = useState(false);
@@ -9,6 +11,16 @@ function Neuron({changeInfo, ...props}){
     const [neuronColor, setNeuronColor] = useState(props.colors[0]);
     const [prevColor, setPrevColor] = useState(props.colors[0]);
     const [prevState, setPrevState] = useState(0);
+    const [opts, setOpts] = useState({
+      font: "Roboto",
+      fontSize: 14,
+      color: "#ffffff",
+      maxWidth: 70,
+      lineHeight: 1,
+      letterSpacing: 0,
+      textAlign: "justify",
+      materialType: "MeshPhongMaterial"
+    });
 
     const neuronColors = [props.colors[0], props.colors[2], calculateColorBetween(props.colors[2],props.colors[3]),props.colors[3],props.colors[4]]
     
@@ -229,8 +241,32 @@ function Neuron({changeInfo, ...props}){
             roughness={1} 
         
             />
+
              </mesh> 
-           
+        <mesh {...props}>
+        <text
+          position-x = {0}
+          position-y = {25}
+          position-z = {0}
+          {...opts}
+          text={props.label}
+          font={"https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff"}
+          anchorX="center"
+          anchorY="middle"
+        ></text>
+         <text
+          position-x = {0}
+          position-y = {-25}
+          position-z = {0}
+          
+          {...opts}
+          fontSize={8}
+          text={props.charging*100 +"%"}
+          font={"https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff"}
+          anchorX="center"
+          anchorY="middle"
+        ></text>
+           </mesh>
         </animated.group>
     )
 }
