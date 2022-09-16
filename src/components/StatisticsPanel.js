@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LinePlot from "./LinePlot";
 import styles from '../styles.module.css';
 import BarPlot from "./BarPlot";

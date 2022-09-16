@@ -1,4 +1,4 @@
-import React, { useRef , useState, useEffect} from 'react'
+import React, { useState, useEffect} from 'react'
 import { useSpring } from '@react-spring/core'
 import { animated } from '@react-spring/three'
 import { extend } from '@react-three/fiber'
@@ -45,56 +45,7 @@ function Neuron({changeInfo, ...props}){
             calculateState(props.state)
           },100);
         }
-          // switch(state){
-          //   case 0:
-          //     timer = setTimeout(()=>{
-          //       setNeuronState(1)
-          //       setNeuronColor(neuronColors[0])
-          //       setPrevColor(neuronColors[0])
-          //     },1000);
-          //     break;
-          //   case 1:
-          //     timer = setTimeout(()=>{
-          //       setNeuronState(1.5)
-          //       setNeuronColor(neuronColors[2])
-          //       setPrevColor(neuronColors[1])
-          //       setPrevState(1)
-          //     },200);
-          //     break;
-          //   case 1.5:
-          //     timer = setTimeout(()=>{
-          //       setNeuronState(2)
-          //       setNeuronColor(neuronColors[3])
-          //       setPrevColor(neuronColors[2])
-          //       setPrevState(1.5)
-          //     },200);
-          //     break;
-          //   case 2:
-          //     timer = setTimeout(()=>{
-          //       setNeuronState(3)
-          //       setNeuronColor(neuronColors[4])
-          //       setPrevColor(neuronColors[3])
-          //       setPrevState(2)
-          //     },1000);
-          //     break;
-          //   case 3:
-          //     timer = setTimeout(()=>{
-          //       setNeuronState(0)
-          //       setNeuronColor(neuronColors[0])
-          //       setPrevColor(neuronColors[4])
-          //       setPrevState(3)
-          //     },1000);
-          //     break;
-          //   default:
-          //     timer = setTimeout(()=>{
-          //       setNeuronState(0)
-          //       setNeuronColor(neuronColors[0])
-          //       setPrevColor(neuronColors[4])
-          //       setPrevState(0)
-          //     },1000);
-          //     break;
-            
-          // }
+      
           
           return () => clearTimeout(timer);
       },

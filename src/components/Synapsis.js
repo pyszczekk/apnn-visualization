@@ -1,8 +1,6 @@
 import * as THREE from 'three'
 import React, { useLayoutEffect, Fragment, useRef, useEffect, useState, useCallback, useContext, useMemo, forwardRef } from 'react'
 import Neuron from './Neuron'
-import { useFrame } from "@react-three/fiber";
-import { max, abs} from 'mathjs';
 
 
 function lerp(a, b, t) {return a + (b - a) * t}
@@ -21,8 +19,7 @@ function Impulse({position, iRef, colors}){
 )
 }
 function StartPoint({ changeInfo, neuron, destination , colors, bgColor, ...props }) {
-  // let [bindHover, hovered] = useHover()
-  // let bindDrag = useDrag(onDrag, onEnd)
+
  const iRef= useRef();
  const [t,setT] = useState(0);
  const [pulsed, setPulsed] = useState(false);
