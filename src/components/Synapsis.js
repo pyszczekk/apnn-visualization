@@ -30,14 +30,12 @@ function StartPoint({ changeInfo, neuron, destination , colors, bgColor, ...prop
     console.log(neuron);
     setT(0);
     setPulsed(true)
-    console.log("Sending")
     iRef.current.position.set(startPosition);
     iRef.current.destination = destination;
   }; 
   
 
   if(t<1 && pulsed){
-    //console.log("Sending")
     
     var newX = lerp(startPosition[0], destination[0], t);   // interpolate between a and b where
     var newY = lerp(startPosition[1], destination[1], t);   // t is first passed through a easing
@@ -62,11 +60,7 @@ function StartPoint({ changeInfo, neuron, destination , colors, bgColor, ...prop
   )
 }
 function EndPoint({changeInfo, neuron, colors, bgColor, ...props }) {
-  // let [bindHover, hovered] = useHover()
-  // let bindDrag = useDrag(onDrag, onEnd)
-  
 
- 
   return (
     <Neuron bgColor={bgColor} changeInfo={changeInfo} position={[neuron.position_x,neuron.position_y,neuron.position_z]} charging={neuron.charging} colors={colors} label={neuron.label} state={neuron.state}/>
     
@@ -97,7 +91,20 @@ function Synapsis({ changeInfo, start, end , colors, weight, bgColor, ...props})
     ref.current.geometry.setFromPoints([startPosition, endPosition].map((point) => new THREE.Vector3(...point)))
   }, [startPosition, endPosition])
   
-  
+  const newX = lerp(start.position_x, end.position_x, 0.8);   // interpolate between a and b where
+  const newY = lerp(start.position_y, end.position_y, 0.8);   // t is first passed through a easing
+  const newZ = lerp(start.position_z, end.position_z, 0.8);   // function in this example.
+  const opts = {
+    font: "Roboto",
+    fontSize: 8,
+    color: "#eeeeee",
+    maxWidth: 400,
+    lineHeight: 1,
+    letterSpacing: 0,
+    textAlign: "justify",
+    materialType: "MeshPhongMaterial"
+  };
+ 
     return (
       <Fragment>
         <line ref={ref} onPointerOver={() => {
@@ -119,7 +126,21 @@ function Synapsis({ changeInfo, start, end , colors, weight, bgColor, ...props})
           />
         </line>
         <StartPoint  bgColor={bgColor} changeInfo={changeInfo} neuron={start} destination={[end.position_x,end.position_y,end.position_z]} colors={colors}/>
-        <EndPoint  bgColor={bgColor} changeInfo={changeInfo} neuron={end} colors={colors}/>
+        {props.showLabel==true?(
+          <mesh position={[newX, newY, newZ]}>
+            <text
+              position-x = {0}
+              position-y = {0}
+              position-z = {0}
+              {...opts}
+              text={"w: "+weight}
+              font={"https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff"}
+              anchorX="center"
+              anchorY="middle"
+            ></text>
+          </mesh>
+        ) : null}
+        <EndPoint  bgColor={bgColor} changeInfo={changeInfo} source={[start.position_x,start.position_y,start.position_z]} neuron={end} colors={colors}/>
       </Fragment>
     )
   }

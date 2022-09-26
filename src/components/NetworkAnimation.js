@@ -35,10 +35,10 @@ getColors = () =>{
 
 generateNetwork(){
 
-
+  
   if(this.props.network!=null && this.props.network!=undefined){
   var network = this.props.network.neural_network.map((synapsis, index)=>(
-     <Synapsis key={index} weight={synapsis.weight} bgColor={this.props.bgColor==null?"#000E17":this.props.bgColor} changeInfo={this.props.changeInfo} start={synapsis.neuronFrom} end={synapsis.neuronTo} colors={this.getColors()}  />
+     <Synapsis showLabel={this.props.network.show_weights} key={index} weight={synapsis.weight} bgColor={this.props.bgColor==null?"#000E17":this.props.bgColor} changeInfo={this.props.changeInfo} start={synapsis.neuronFrom} end={synapsis.neuronTo} colors={this.getColors()}  />
   ))
   return network
   }

@@ -154,7 +154,7 @@ function Neuron({changeInfo, ...props}){
                         "position:"+props.position+"\n"+
                         "charging value: "+props.charging+"\n"+
                         "state: "+props.state+"\n"+
-                        "description: "+props.description+"\n"
+                        "description: pulsed x3\n"
             )
           }}
           onPointerOut={() => {
