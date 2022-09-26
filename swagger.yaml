@@ -105,6 +105,9 @@ definitions:
         type: string
       title:
         type: string
+      show_weights:
+        type: boolean
+        default: false
       neural_network:
         type: array
         items:
