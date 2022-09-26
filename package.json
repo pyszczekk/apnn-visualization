@@ -69,6 +69,7 @@
     "react-toggle-slider": "^0.4.0",
     "state-pool": "^0.7.1",
     "three": "0.140.0",
+    "troika-three-text": "^0.46.4",
     "url-loader": "^4.1.1"
   },
   "files": [
